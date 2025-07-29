@@ -1,0 +1,65 @@
+html, body {
+      height: 100%;
+      margin: 0;
+    }
+    .chat-container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .chat-sidebar, .chat-details {
+      width: 25%;
+      background-color: #fff;
+      overflow-y: auto;
+      border-right: 1px solid #dee2e6;
+    }
+    .chat-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #e9eff6;
+    }
+    .chat-header, .chat-footer {
+      background-color: #fff;
+      padding: 15px;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .chat-footer {
+      border-top: 1px solid #dee2e6;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .message {
+      margin-bottom: 15px;
+    }
+    .message.sent {
+      text-align: right;
+    }
+    .bubble {
+      display: inline-block;
+      padding: 10px 15px;
+      border-radius: 15px;
+      max-width: 75%;
+    }
+    .received .bubble {
+      background-color: #f1f0f0;
+      color: #000;
+    }
+    .sent .bubble {
+      background-color: #4e73df;
+      color: #fff;
+    }
+    .contact-item {
+      padding: 12px;
+      border-bottom: 1px solid #dee2e6;
+      cursor: pointer;
+    }
+    .contact-item:hover {
+      background-color: #f8f9fa;
+    }
+    .attachment-icons .btn {
+      margin: 4px 2px;
+    }
