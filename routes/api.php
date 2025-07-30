@@ -16,8 +16,8 @@ use App\Http\Controllers\SupportController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::post('login', [AuthController::class, 'login'])->name('login');
-Route::post('register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/messages/{receiver_id}', [MessageController::class, 'index']);
