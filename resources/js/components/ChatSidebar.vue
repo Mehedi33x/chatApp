@@ -1,10 +1,8 @@
-<!-- ChatSidebar.vue -->
 <template>
   <div class="p-3 border-end" style="width: 25%; background: white; height: 100vh; overflow-y: auto;">
     <h5>Chats</h5>
-    <input type="text" class="form-control mb-3" placeholder="Search Friends" />
-
-    <div v-for="user in users" :key="user.id" class="mb-2 p-2 border-bottom hover bg-light cursor-pointer"
+    <input type="text" class="form-control mb-3" placeholder="Search Friends" v-model="searchTerm" />
+    <div v-for="user in filteredUsers" :key="user.id" class="mb-2 p-2 border-bottom hover bg-light cursor-pointer"
       @click="selectUser(user)">
       {{ user.name }}
     </div>
@@ -17,9 +15,18 @@ export default {
   data() {
     return {
       users: [],
+      searchTerm: "",
     };
   },
   emits: ["select-user"],
+  computed: {
+    filteredUsers() {
+      if (!this.searchTerm) return this.users;
+      return this.users.filter((user) =>
+        user.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    },
+  },
   methods: {
     selectUser(user) {
       this.$emit("select-user", user);
@@ -32,13 +39,8 @@ export default {
           },
         });
         const allUsers = await res.json();
-        const currentUserString = localStorage.getItem('user'); // Store this during login
-        const currentUser = JSON.parse(currentUserString);
-        const currentUserId = currentUser.id;
-        console.log(currentUserId);
-        
-
-        this.users = allUsers.filter((user) => user.id != currentUserId);
+        const currentUser = JSON.parse(localStorage.getItem("user"));
+        this.users = allUsers.filter((user) => user.id !== currentUser.id);
       } catch (error) {
         console.error("Failed to fetch users:", error);
       }

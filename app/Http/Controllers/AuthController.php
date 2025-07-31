@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -19,45 +18,30 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6'
         ]);
-
         if ($validated->fails()) {
             return response()->json($validated->errors(), 422);
         }
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-
         $token = JWTAuth::fromUser($user);
-
         return response()->json(compact('user', 'token'));
     }
 
     public function login(Request $request)
     {
-        // dd(1);
         $credentials = $request->only('email', 'password');
-
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-
         $user = auth('api')->user();
-
         return response()->json([
             'token' => $token,
             'user' => $user,
         ]);
     }
-
-
-    public function me()
-    {
-        return response()->json(auth()->user());
-    }
-
     public function logout()
     {
         auth()->logout();

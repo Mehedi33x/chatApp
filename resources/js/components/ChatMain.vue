@@ -1,14 +1,12 @@
 <template>
   <div class="d-flex flex-column flex-grow-1" style="height: 100vh;">
-    <!-- Top bar -->
     <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
       <h6 class="mb-0">
-        {{ receiver.name }} <span class="badge bg-success">Online</span>
+        {{ receiver.name }}
+        <!-- <span class="badge bg-success">Online</span> -->
       </h6>
       <button class="btn btn-sm btn-outline-danger" @click="logout">Logout</button>
     </div>
-
-    <!-- Messages display -->
     <div ref="messageContainer" class="flex-grow-1 p-3 overflow-auto" style="background-color: #e9eff6;">
       <div v-for="(item, index) in messages" :key="index" class="mb-3"
         :class="{ 'text-end': item.sender_id === user.id }">
@@ -18,8 +16,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Message input -->
     <div class="p-3 bg-white border-top">
       <div class="input-group">
         <input v-model="newMessage" type="text" class="form-control" placeholder="Write something..."
@@ -54,6 +50,7 @@ export default {
       handler() {
         if (this.receiver?.id) {
           this.fetchMessages();
+          this.listenForMessages();
         }
       },
     },
@@ -104,6 +101,19 @@ export default {
       }
     },
 
+    listenForMessages() {
+      console.log('listening for messages');
+      window.Echo.private(`chat.${this.user.id}`)
+        .listen('MessageSent', (e) => {
+          console.log("Received event data:", e);
+          if (e.message.sender_id === this.receiver.id) {
+            console.log("Message from correct sender:", e.message);
+
+            this.messages.push(e.message);
+            this.scrollToBottom();
+          }
+        });
+    },
     scrollToBottom() {
       this.$nextTick(() => {
         const container = this.$refs.messageContainer;
@@ -112,6 +122,10 @@ export default {
         }
       });
     },
+  },
+
+  beforeUnmount() {
+    window.Echo.leave(`chat.${this.user.id}`);
   },
 };
 </script>
