@@ -61,13 +61,15 @@ export default {
                 });
                 this.$router.push('/login');
             } catch (err) {
-                const errorMsg = err.response?.data
+                console.log(err);
+                
+                const errorMsg = err.response?.data.message
                     ? Object.values(err.response.data)[0][0]
                     : 'Something went wrong';
                 this.$alert({
                     type: 'error',
                     title: 'Registration Failed',
-                    text: errorMsg
+                    // text: errorMsg
                 });
             }
         }
